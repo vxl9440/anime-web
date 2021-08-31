@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="top-area p-1" th:fragment="nav(which)">
+    <div class="logo-area" >
+        <div>
+            <a href="/" class="h2 text-white" style="margin: 0">SOX ANIME</a>
+        </div>
+    </div>
+    <div class="account-area">
+        <div>
+            <a class="text-white" th:href="(${username} == null)?'/login':'/profile'"
+               th:text="(${username} == null)?'登录':${username}" style="text-decoration: underline"></a>
+        </div>
+    </div>
+    <div class="nav-area">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-link" th:classappend="(${which} eq 'home')?'active':''" href="/index">主页</a>
+                <a class="nav-link" th:classappend="(${which} eq 'category')?'active':''" href="/category/all">目录</a>
+                <a class="nav-link active" th:if="${which} eq 'search'">搜索</a>
+                <a class="nav-link active" th:if="${which} eq 'detail'">详情</a>
+                <a class="nav-link active" th:if="${which} eq 'account'">账号</a>
+                <a class="nav-link active" th:if="${which} eq 'play'">播放</a>
+            </div>
+        </nav>
+    </div>
+    <div class="search-area">
+        <form class="input-group" method="get" action="/search">
+            <input type="text" name="keyword" class="form-control bg-dark text-white" style="border-color: black" placeholder="输入关键词" maxlength="32">
+            <div class="input-group-append">
+                <input class="btn btn-secondary" value="搜索" type="submit">
+            </div>
+        </form>
+    </div>
+    <div class="notification-area">
+        <div>
+            <span class="text-danger" th:text="(${notification} != null)?${notification}:'暂无通知'"></span>
+        </div>
+    </div>
+</div>
+
+<!-- comment area -->
+<div class="comment-area" th:fragment="comment-area">
+    <h5 class="text-secondary mb-3">评论区</h5>
+    <div class="p-3" style="border: 1px solid #646160">
+        <div class="comment-write-area position-relative" style="text-align: right">
+            <div style="position: relative">
+                <textarea class="bg-dark text-white"  id="comment-content" placeholder="发条评论吧"
+                          maxlength="256" th:disabled="(${username} == null)?'true':'false'"
+                          rows="3" style="width: 100%;min-height: 5em"></textarea>
+                <div th:if="${username} == null" class="login-for-comment">请<a href="/login">登录</a>后评论</div>
+            </div>
+            <button id="btn-comment-submit" th:disabled="(${username} == null)?'true':'false'" class="btn btn-dark">提交</button>
+            <div th:replace="~{common/user-common::spinner}"></div>
+        </div>
+        <div class="comment-display-wrapper position-relative">
+            <div class="comment-display-area">
+                <div class="comment-entity" th:if="${commentList.size() > 0}" th:each="comment:${commentList}">
+                    <span th:text="${comment.getUsername()}"></span>&nbsp;
+                    <span th:text="${#dates.format(comment.getPostDate(), 'yyyy-MM-dd')}"></span>
+                    <div>
+                        <span th:text="${comment.getContent()}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="view-more-comment" th:if="${commentList.size() > 0}">
+                <span class="text-white">点击阅读更多评论</span>
+            </div>
+            <div style="text-align: center" class="no-comment-area text-white" th:if="${commentList.size() == 0}">
+                还没有评论，发一条评论吧
+            </div>
+            <div th:replace="~{common/user-common::spinner}"></div>
+        </div>
+    </div>
+</div>
+
+<!-- spinner -->
+<div class="spinner-div" th:fragment="spinner">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+</html>

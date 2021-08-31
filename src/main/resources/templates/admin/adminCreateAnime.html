@@ -1,0 +1,116 @@
+<!--视频 - 搜索-->
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/common.css">
+    <title>创建动漫</title>
+
+    <style>
+        #return-page{
+            height: 100%;
+            width: 100%;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!--navigation-->
+<nav th:replace="~{common/admin-common::admin-navbar}"></nav>
+
+<!--form-->
+<div class="center-wrapper">
+    <div id="anime-info" style="padding-top: 0.1rem">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">中文名</span>
+            </div>
+            <input type="text" aria-label="anime name" class="form-control" maxlength="64" id="anime-CN-name">
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">原名</span>
+            </div>
+            <input type="text" aria-label="anime name" class="form-control" maxlength="64" id="anime-original-name">
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">播出时间</span>
+            </div>
+            <input type="date" aria-label="released date" class="form-control" id="anime-released-date">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroup-status">状态</label>
+            </div>
+            <select class="custom-select" id="inputGroup-status">
+                <option th:each="status:${statusList}" th:if="${status} ne '全部'" th:text="${status}" th:value="${status}"></option>
+            </select>
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroup-type">类型</label>
+            </div>
+            <select class="custom-select" id="inputGroup-type">
+                <option th:each="type:${typeList}" th:if="${type.getTypeName()} ne '全部'"
+                        th:text="${type.getTypeName()}" th:value="${type.getTypeName()}"></option>
+            </select>
+        </div>
+
+        <div id="type-area" class="tag-area">
+            <ul>
+            </ul>
+        </div>
+
+        <label for="anime-introduction">简介:</label><br>
+        <textarea id="anime-introduction" rows="12" maxlength="512" ></textarea>
+
+        <div style="width: 100%;text-align: center;padding-bottom: 1rem">
+            <button class="btn btn-secondary" id="form-btn" disabled>确认创建</button>
+        </div>
+    </div>
+    <div id="return-page">
+        <div style="padding-top: 1rem">
+            <h4></h4>
+        </div>
+        <div style="margin: 1rem 0">
+            <img id="symbol-success" src="/img/success.jpg" alt="success" height="150" width="150">
+            <img id="symbol-fail" src="/img/fail.png" alt="success" height="150" width="150">
+        </div>
+        <div style="padding-bottom: 1rem">
+            <button class="btn btn-primary" id="return-btn">继续创建</button>
+            <a class="btn btn-secondary" href="#" id="go-edit-btn">前往编辑</a>
+        </div>
+        <div style="padding-bottom: 1rem">
+            <p id="return-msg"></p>
+        </div>
+    </div>
+
+    <!-- spinner -->
+    <div th:replace="~{common/admin-common::admin-spinner}"></div>
+</div>
+
+
+
+<script src="/js/api/JQuery.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+<script src="/js/util.js"></script>
+<script src="/js/adminAnimeInfoForm.js"></script>
+<script src="/js/adminCreateAnime.js"></script>
+
+
+</body>
+</html>

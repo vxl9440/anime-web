@@ -1,0 +1,38 @@
+#search-result-wrapper{
+    padding: 0.5rem;
+}
+
+.anime-result-entity{
+    box-shadow: none;
+    border-bottom: 1px solid wheat;
+}
+
+span{
+    color: white;
+}
+
+.anime-information>p>span{
+    color: white;
+}
+
+#result-count{
+    color: white;
+}
+
+#result-msg{
+    color: white;
+}
+
+@media (max-width: 576px) {
+    .anime-information>p{font-size: 0.7em;}
+}
+
+
+@media (min-width: 576px) and (max-width: 768px) {
+    .anime-information>p{font-size: 0.8em;}
+}
+
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .anime-information>p{font-size: 0.9em;}
+}

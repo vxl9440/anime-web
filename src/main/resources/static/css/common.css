@@ -1,0 +1,221 @@
+body{
+    background-color: #d0eaea;
+}
+
+
+.center-wrapper{
+    margin: 5rem auto 5rem auto;
+    padding: 0 0.4rem;
+    position: relative;
+    width: 70%;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 10px 5px 5px #a9a5a5;
+}
+
+/* index */
+#current-user>a{
+    text-decoration: underline;
+    color: blueviolet;
+    position: absolute;
+    right: 1em;
+    top: 15px;
+}
+
+#search-form{
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 80%;
+}
+
+
+/* creteAnime */
+.input-group,#anime-introduction{
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.tag-area>ul{
+    display: inline-table;
+    padding: 5px;
+}
+
+.tag-area>ul>li{
+    display: inline-block;
+    padding: 0.5rem 0.8rem;
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+    position: relative;
+    background-color: #a6b2ba;
+}
+
+.tag-area>ul>li:hover{
+    background-color: #7eafc8;
+}
+
+.tag-area>ul>li>span{
+    font-weight: 500;
+    color: red;
+    font-size: 1.2rem;
+    position: absolute;
+    top: -12px;
+    right: 0;
+    cursor: pointer;
+}
+
+
+/*search*/
+#search-result-wrapper{
+    background-color: white;
+    width: 56%;
+    margin: 10rem auto 2rem auto;
+    padding: 5px;
+    border-radius: 0.3rem;
+    box-shadow: 10px 5px 5px #a9a5a5;
+}
+
+
+/* spinner and submit_msg */
+#submit-msg{
+    background-color: black;
+    padding: 7px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    color: white;
+}
+
+
+.spinner-div,#submit-msg{
+    display: none;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: 1060;
+}
+
+
+/* media */
+/*@media (max-width: 576px) {*/
+/*    #search-result-wrapper,*/
+/*    .center-wrapper{*/
+/*        width: 98%;*/
+/*    }*/
+/*    #result-sort{*/
+/*        width: 50%;*/
+/*    }*/
+/*    #pagination{*/
+/*        width: 80%;*/
+/*    }*/
+/*}*/
+
+/*@media  (max-width: 768px) {*/
+/*    #search-result-wrapper,*/
+/*    .center-wrapper{*/
+/*        width: 98%;*/
+/*    }*/
+/*    #result-sort{*/
+/*        width: 50%;*/
+/*    }*/
+/*    #pagination{*/
+/*        width: 70%;*/
+/*    }*/
+/*}*/
+
+/*@media  (max-width: 992px) {*/
+/*    #search-result-wrapper,*/
+/*    .center-wrapper{*/
+/*        width: 90%;*/
+/*    }*/
+/*    #current-user>a{*/
+/*        position: relative;*/
+/*        right: 0;*/
+/*        top: 0;*/
+/*    }*/
+/*    #result-sort{*/
+/*        width: 35%;*/
+/*    }*/
+/*    #pagination{*/
+/*        width: 50%;*/
+/*    }*/
+/*}*/
+
+
+/*@media  (max-width: 1200px) {*/
+/*    #search-result-wrapper,*/
+/*    .center-wrapper{*/
+/*        width: 85%;*/
+/*    }*/
+/*}*/
+/*----------------------------------------------*/
+@media (max-width: 576px) {
+    #search-result-wrapper,
+    .center-wrapper{
+        width: 98%;
+    }
+
+    #current-user>a{
+        position: relative;
+        right: 0;
+        top: 0;
+    }
+
+    .anime-information>p{
+        font-size: 0.7em;
+    }
+}
+
+
+@media (min-width: 576px) and (max-width: 768px) {
+    #search-result-wrapper,
+    .center-wrapper{
+        width: 96%;
+    }
+
+    #current-user>a{
+        position: relative;
+        right: 0;
+        top: 0;
+    }
+
+    .anime-information>p{
+        font-size: 0.8em;
+    }
+}
+
+
+@media (min-width: 768px) and (max-width: 992px) {
+    #search-result-wrapper,
+    .center-wrapper{
+        width: 94%;
+    }
+    #current-user>a{
+        position: relative;
+        right: 0;
+        top: 0;
+    }
+
+    .anime-information>p{
+        font-size: 0.9em;
+    }
+}
+
+
+@media (min-width: 992px) and (max-width: 1200px) {
+    #search-result-wrapper,
+    .center-wrapper{
+        width: 90%;
+    }
+}
+
+
+@media (min-width: 1200px) {
+
+}

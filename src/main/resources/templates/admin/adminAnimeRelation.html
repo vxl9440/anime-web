@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/common-category.css">
+    <title>动漫关联</title>
+
+    <style>
+        .main-container{
+            width: 1080px;
+            padding: 0.5rem;
+            margin: 1.5rem auto;
+            background-color: white;
+        }
+
+        .relation-entity-container{
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+
+        .relation-entity{
+            height: 11em;
+            border: 1px solid black;
+            border-radius: 5px;
+            overflow-y: scroll;
+            -ms-overflow-y: scroll;
+            flex: 0 1 auto;
+            flex-basis: 32%;
+            margin: 4px;
+            background-color: #e5e9ec;
+        }
+
+        @media screen and (max-width: 768px) {
+            .main-container{
+                width: 98%;
+            }
+            .relation-entity{
+                flex-basis: 48%;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            .relation-entity{
+                flex-basis: 96%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav th:replace="~{common/admin-common::admin-navbar}"></nav>
+
+<div class="main-container">
+    <form class="input-group mt-4" action="/admin/adminRelationSearch" method="get" >
+        <input type="text" class="form-control" name="keyword" maxlength="25" placeholder="搜索关联" required>
+        <div class="input-group-append">
+            <input class="btn btn-secondary" type="submit" value="搜索">
+        </div>
+    </form>
+
+    <div class="relation-container">
+        <h5>共<span th:text="${relationList.size()}"></span>个结果</h5>
+        <div style="text-align: right">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#relation-add-modal">添加关联</button>
+        </div>
+        <div class="relation-entity-container">
+            <div class="relation-entity position-relative" th:each="relation:${relationList}">
+                <h5 class="pl-2 text-secondary">关联名称:&nbsp<span class="text-primary" th:text="${relation.getRelationName()}"></span></h5>
+                <h5 class="pl-2 text-secondary">关联号码:&nbsp<span class="text-primary" th:text="${relation.getRelationId()}"></span></h5>
+                <p class="m-0 pl-2">
+                    <span class="text-primary relation-edit-btn" data-toggle="modal" data-target="#relation-edit-modal"
+                          style="text-decoration: underline;cursor: pointer">编辑关联</span>&nbsp;
+                    <span class="text-danger relation-delete-btn" style="text-decoration: underline;cursor: pointer">删除关联</span>
+                </p>
+                 <ol class="pl-4 pt-2" th:if="${relation.getAnimeList().size() > 0}">
+                     <li th:each="anime:${relation.getAnimeList()}">
+                         <a th:href="|/admin/adminRewriteAnime/${anime.getAnimeId()}|" th:text="${anime.getChineseName()}"></a>&nbsp;
+                         <span class="d-none" th:text="${anime.getAnimeId()}"></span>
+                         <span style="text-decoration: underline;cursor: pointer" class="text-danger relation-anime-delete-btn">删除</span>
+                     </li>
+                 </ol>
+                <div class="pl-4 pt-2" th:if="${relation.getAnimeList().size() == 0}">
+                    <span>暂无动画</span>
+                </div>
+                <!-- spinner -->
+                <div th:replace="~{common/admin-common::admin-spinner}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- relation add modal -->
+<div class="modal fade" id="relation-add-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content position-relative">
+            <div class="modal-header">
+                <h5 class="modal-title">添加新关联</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="relation-name" class="col-form-label">输入关联名字:</label>
+                    <input type="text" class="form-control" maxlength="32" id="relation-name">
+                    <p class="video-submit-msg d-none">关联名字不能为空</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="relation-add-btn">添加</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+            </div>
+            <!-- spinner -->
+            <div th:replace="~{common/admin-common::admin-spinner}"></div>
+        </div>
+    </div>
+</div>
+
+<!-- relation add modal -->
+<div class="modal fade" id="relation-edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content position-relative">
+            <div class="modal-header">
+                <h5 class="modal-title">修改关联</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <span id="current-relation-id" class="d-none"></span>
+                <div>
+                    <label for="current-relation-name">当前名字:</label>
+                </div>
+                <div class="input-group mb-2 mt-1">
+                    <input type="text" class="form-control" maxlength="32" id="current-relation-name" placeholder="输入新的关联名字">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" id="relation-name-change-btn" type="button">修改</button>
+                    </div>
+                </div>
+                <div>
+                    <label for="new-relation-animeId">添加动画:</label>
+                </div>
+                <div class="input-group mb-2 mt-1">
+                    <input type="text" class="form-control" maxlength="40" id="new-relation-animeId" placeholder="输入动画ID">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" id="relation-anime-add-btn" type="button">添加</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+            </div>
+            <!-- spinner -->
+            <div th:replace="~{common/admin-common::admin-spinner}"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="/js/api/JQuery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script src="/js/util.js"></script>
+<script src="/js/adminAnimeRelation.js"></script>
+</body>
+</html>

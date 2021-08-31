@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/user/nav.css}">
+    <title>个人主页</title>
+    <style>
+        .spinner-div{
+            display: none;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            z-index: 1010;
+        }
+
+        .collection-container{
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .collection-anime-entity{
+            flex: 0 1 auto;
+            flex-basis: 12%;
+            padding: 5px;
+        }
+
+        .collection-anime-entity>div>a>img{
+            width: 100%;
+            height: auto;
+        }
+
+        .like-delete-btn:hover{
+            color: yellowgreen;
+        }
+
+        @media screen and (max-width: 768px) {
+            .collection-anime-entity{
+                flex-basis: 24%;
+            }
+        }
+
+        @media screen and (max-width: 576px){
+            .collection-anime-entity{
+                flex-basis: 32%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container pb-3">
+    <div th:replace="~{common/user-common::nav('account')}"></div>
+
+    <div class="main-account-container pl-2 pr-2 position-relative">
+        <div class="account-info-area">
+            <h5 class="text-secondary">当前用户</h5>
+            <p class="text-primary">
+                <span class="text-white">[[${username}]]</span>&nbsp;
+                <a style="text-decoration: underline" href="/logout">退出</a>&nbsp;
+            </p>
+        </div>
+        <div class="account-update-area">
+            <div class="form-group form-inline">
+                <label for="old-password" class="mr-2 text-secondary">输入旧密码:</label>
+                <input type="password" name="password" class="form-control text-white bg-dark"
+                       maxlength="20" id="old-password">
+            </div>
+            <div class="form-group form-inline">
+                <label for="new-password" class="mr-2 text-secondary">输入新密码:</label>
+                <input type="password" name="password" class="form-control text-white bg-dark"
+                       maxlength="20" id="new-password">
+            </div>
+            <div class="form-group form-inline" id="re-password-container">
+                <label for="re-new-password" class="mr-2 text-secondary">确认新密码:</label>
+                <input type="password" class="form-control text-white bg-dark"
+                       id="re-new-password" maxlength="20">
+            </div>
+            <button id="password-change-btn" class="btn btn-dark">修改</button>
+        </div>
+        <div class="account-collection-area mt-3">
+            <h5 class="text-secondary">我的收藏</h5>
+            <div class="collection-container" th:if="${likeAnimeList.size() > 0}">
+                <div class="collection-anime-entity" th:aria-label="${likeAnime.getAnimeId()}" th:each="likeAnime:${likeAnimeList}">
+                    <div class="position-relative">
+                        <a th:href="|/detail/${likeAnime.getAnimeId()}|">
+                            <img th:src="${likeAnime.getCoverUrl()}" alt="test">
+                        </a>
+                        <span style="right: 1px;top: -0.5em;font-size: 2em;cursor: pointer"
+                              class="m-0 position-absolute like-delete-btn">&times;</span>
+                    </div>
+                    <div style="text-align: center;height: 1.4em;overflow-y: hidden">
+                        <a th:href="|/detail/${likeAnime.getAnimeId()}|" th:text="${likeAnime.getChineseName()}"></a>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center" class="text-white" th:if="${likeAnimeList.size() == 0}">
+                暂无收藏
+            </div>
+        </div>
+        <div th:replace="~{common/user-common::spinner}"></div>
+    </div>
+</div>
+
+<script src="/js/api/JQuery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="/js/util.js"></script>
+<script src="/js/likeEvent.js"></script>
+<script src="/js/profile.js"></script>
+</body>
+</html>

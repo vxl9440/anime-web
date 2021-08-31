@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/user/nav.css">
+    <link rel="stylesheet" href="/css/user/index.css">
+    <title>主页</title>
+</head>
+<body>
+
+<div class="main-container">
+    <div th:replace="~{common/user-common::nav('home')}"></div>
+    <div style="height: 1em"></div>
+    <div class="content-area" style="padding: 0">
+        <!--carousel-->
+        <div class="mb-3" style="grid-column-start: 1;grid-column-end: 13">
+            <div id="carousel" class="carousel slide p-1" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li th:each="i:${#numbers.sequence(0,slideList.size() - 1)}"
+                        data-target="#carousel" th:data-slide-to="${i}" class="active"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div th:each="slide:${slideList}" class="carousel-item" th:classappend="(${slide.getLocked() == 1})?'active':''">
+                        <a th:href="|/detail/${slide.getAnimeId()}|">
+                            <img th:src="${slide.getCoverUrl()}" class="d-block w-100 h-auto" alt="slide">
+                        </a>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5 class="font-weight-bold text-dark" th:text="${slide.getChineseName()}"></h5>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <div class="recommend-recent-area">
+            <div class="recommend-area">
+                <div style="margin-left: 5px">
+                    <h4><a style="color: white">今日推荐</a></h4>
+                </div>
+                <div class="anime-container">
+                    <div class="anime-entity" th:each="reAnime:${recommendList}">
+                        <div style="position: relative">
+                            <a th:href="|/detail/${reAnime.getAnimeId()}|">
+                                <img th:src="${reAnime.getCoverUrl()}" alt="cover">
+                            </a>
+                            <span class="episode-tag">
+                                <a th:href="|/detail/${reAnime.getAnimeId()}|" th:text="${reAnime.getEpisodeTag()}"></a>
+                            </span>
+                        </div>
+                        <div class="anime-name">
+                            <a th:text="${reAnime.getChineseName()}" th:href="|/detail/${reAnime.getAnimeId()}|"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="recent-area">
+                <div style="margin-left: 5px">
+                    <h4><a style="color: white">最近更新</a></h4>
+                </div>
+                <div class="anime-container">
+                    <div class="anime-entity" th:each="update:${updateList}">
+                        <div style="position: relative">
+                            <a th:href="|/detail/${update.getAnimeId()}|">
+                                <img style="height: 100%" th:src="${update.getCoverUrl()}" alt="cover">
+                            </a>
+                            <span class="episode-tag">
+                                <a th:href="|/detail/${update.getAnimeId()}|" th:text="${update.getEpisodeTag()}"></a>
+                            </span>
+                        </div>
+                        <div class="anime-name">
+                            <a th:text="${update.getChineseName()}" th:href="|/detail/${update.getAnimeId()}|"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="week-area">
+            <div>
+                <h4 class="text-white">每周更新</h4>
+            </div>
+            <nav>
+                <div class="nav nav-tabs" role="tablist" style="flex-wrap: nowrap;">
+                    <a class="nav-item nav-link" th:each="weekday:${weekdayList}"
+                       th:classappend="(${weekday.getWeekday()} == 'Sun')?'active':''" data-toggle="tab"
+                       th:href="'#nav-'+${weekday.getWeekday()}" role="tab" th:aria-controls="'nav-'+${weekday.getWeekday()}"
+                       th:aria-selected="(${weekday.getWeekday()} == 'Sun')?'true':'false'">[[${weekday.getRef()}]]</a>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent" style="background-color: #454343;">
+                <div th:each="weekday:${weekdayList}" class="tab-pane fade"
+                     th:classappend="(${weekday.getWeekday()} == 'Sun')?'active show':''"
+                     th:id="'nav-'+${weekday.getWeekday()}" role="tabpanel"
+                     th:aria-labelledby="'nav-'+${weekday.getWeekday()}+'-tab'">
+                    <div class="weak-anime-entity" th:each="weekAnime:${weekday.getAnimeList()}">
+                        <div><a th:href="|/detail/${weekAnime.getAnimeId()}|" th:text="${weekAnime.getChineseName()}"></a></div>
+                        <div><a class="text-primary" th:href="|/detail/${weekAnime.getAnimeId()}|" th:text="${weekAnime.getEpisodeTag()}"></a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/api/JQuery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>

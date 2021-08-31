@@ -1,0 +1,140 @@
+.content-container{
+    padding: 0.5rem;
+}
+
+.play-area,.related-area{
+    border: 1px solid #646160;
+    padding: 5px;
+}
+
+/*episode area*/
+.episode-area>ul>li{
+    display: inline-block;
+    width: 5.5em;
+    margin-right: 1rem;
+    margin-bottom: 0.7rem;
+    padding: 0.1rem 0;
+    border: 1px solid #646160;
+    text-align: center;
+    cursor: pointer;
+}
+
+.episode-area>ul>li>a{
+    display: inline-block;
+    color: white;
+    width: 5.5em;
+}
+
+.episode-area>ul>li>a:hover{
+    text-decoration: none;
+}
+
+.episode-area>ul>li:hover{
+    background-color: #b3b7bb;
+    color: #005cbf;
+}
+
+.current-episode{
+    background-color: #965c5c;
+}
+
+/* related area */
+.related-area>p{
+    margin-bottom: 0.3rem;
+}
+
+.related-area>p>a{
+    text-decoration: underline;
+}
+
+/* recommend area */
+.recommend-items-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.recommend-items-area{
+    flex: 0 1 auto;
+    flex-basis: 12.4%;
+    padding: 10px 5px;
+}
+
+.recommend-items-area>div>a>img{
+    width: 100%;
+    height: auto;
+}
+
+.recommend-items-area>div>div{
+    text-align: center;
+    width: 100%;
+    height: 20px;
+    color: white;
+    font-size: 0.8rem;
+    text-decoration: underline;
+    overflow-y: hidden;
+}
+
+/* comment */
+.comment-entity{
+    border-bottom: 1px solid #646160;
+}
+.comment-entity>span:first-of-type{
+    color: red;
+}
+
+.comment-entity>span:last-of-type{
+    color: #76769d;
+}
+
+.comment-entity>div>span{
+    color: #b8a6a6;
+}
+
+.view-more-comment{
+    background-color: #222020;
+    opacity: 0.6;
+    text-align: center;
+}
+
+.view-more-comment>span{
+    cursor: pointer;
+}
+
+.login-for-comment{
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: white;
+    transform: translate(-50%, -50%);
+}
+
+.login-for-comment>a{
+    color: red;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* spinner */
+.spinner-div{
+    display: none;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: 1010;
+}
+
+@media screen and (max-width: 768px) {
+    .recommend-items-area{
+        flex-basis: 33.2%;
+    }
+
+    .episode-area>ul>li,
+    .episode-area>ul>li>a{
+        font-size: 0.9em;
+        width: 5rem;
+    }
+}

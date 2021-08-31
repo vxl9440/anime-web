@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: dev
+  banner:
+    location: banner.txt
+  datasource:
+    username: root
+    password: Qq1196726420!
+    url: jdbc:mysql://localhost:3306/anime_web?ServerTimeZone=UTC-4&CharacterEncoding=utf-8&UseUnicode=true&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 12
+  servlet:
+    multipart:
+      max-file-size: 1500MB
+      max-request-size: 1510MB
+  thymeleaf:
+    encoding: UTF-8
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+
+server:
+  servlet:
+    session:
+      timeout: 10800
+
+constant:
+  img-resource-path: F:\web_root\anime_web\imageFile\
+  video-resource-path: F:\web_root\anime_web\videoFile\
+  img-url-path: http://192.168.0.106/imageFile/
+  video-url-path: http://192.168.0.106/videoFile/
+  page-size: 10
+
+logging:
+  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger : %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger : %msg%n"
+  file:
+    path: E:\webappRoot\log

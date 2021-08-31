@@ -1,0 +1,257 @@
+<!--视频 - 搜索-->
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/common.css">
+    <title>修改动漫</title>
+
+    <style>
+        .nav-manage{
+            cursor: pointer;
+        }
+
+        .video-submit-msg{
+            color: red;
+            display: none;
+        }
+
+        .video-entity{
+            padding: 1rem;
+            margin: 0 auto 0.7rem auto;
+            border-radius: 5px;
+            border: 1px solid black;
+            box-shadow: 0 3px 2px #b7a1a1;
+        }
+
+    </style>
+</head>
+<body>
+<!--navigation-->
+<nav th:replace="~{common/admin-common::admin-navbar}"></nav>
+
+<!--form-->
+<div class="center-wrapper">
+    <ul class="nav nav-pills justify-content-center" style="margin: 0 0.5rem">
+        <li class="nav-item">
+            <span class="nav-link active nav-manage" id="info-nav">信息管理</span>
+        </li>
+        <li class="nav-item">
+            <span class="nav-link nav-manage" id="cover-nav">封面管理</span>
+        </li>
+        <li class="nav-item">
+            <span class="nav-link nav-manage" id="video-nav">视频管理</span>
+        </li>
+    </ul>
+
+    <!-- anime info -->
+    <div id="anime-info" style="padding-top: 0.1rem">
+        <p id="anime-id" style="font-weight: bold" th:text="${anime.getAnimeId()}"></p>
+        <div>
+            <p class="mt-1">锁状态: </p>
+            <button id="lock-status" class="btn btn-primary"
+                    th:aria-label="(${anime.getLocked() == 1})?'on':'off'"
+                    th:text="(${anime.getLocked() == 1})?'点击关闭':'点击开启'"></button>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">中文名</span>
+            </div>
+            <input type="text" aria-label="anime name" class="form-control" maxlength="64"
+                   id="anime-CN-name" th:value="${anime.getChineseName()}">
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">原名</span>
+            </div>
+            <input type="text" aria-label="anime name" class="form-control" maxlength="64"
+                   id="anime-original-name" th:value="${anime.getOriginalName()}">
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">播出时间</span>
+            </div>
+            <input type="date" aria-label="released date" class="form-control"
+                   id="anime-released-date" th:value="${#dates.format(anime.getReleasedDate(), 'yyyy-MM-dd')}">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroup-status">状态</label>
+            </div>
+            <select class="custom-select" id="inputGroup-status">
+                <option th:each="status:${statusList}" th:if="${status} ne '全部'" th:text="${status}"
+                        th:value="${status}" th:selected="(${anime.getStatus()} eq ${status})?'true':'false'"></option>
+            </select>
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroup-type">类型</label>
+            </div>
+            <select class="custom-select" id="inputGroup-type">
+                <option th:each="type:${typeList}" th:if="${type.getTypeName()} ne '全部'"
+                        th:text="${type.getTypeName()}" th:value="${type.getTypeName()}"></option>
+            </select>
+        </div>
+
+        <div id="type-area" class="tag-area">
+            <ul>
+                <li th:each="type2:${anime.getTypes()}">[[${type2}]]<span>x</span></li>
+            </ul>
+        </div>
+
+        <div class="mb-3" >
+            <div>
+                <span>关联动画: </span>
+            </div>
+            <ul class="list-unstyled" th:if="${relation != null}">
+                <li th:if="${relatedAnime.getAnimeId() != anime.getAnimeId()}" th:each="relatedAnime:${relation.getAnimeList()}">
+                    <a th:text="${relatedAnime.getChineseName()}"
+                       th:href="|/admin/adminRewriteAnime/${relatedAnime.getAnimeId()}|"></a>
+                </li>
+            </ul>
+            <div th:if="${relation == null}">
+                <span class="text-danger">暂无关联动画</span>
+            </div>
+        </div>
+
+        <label for="anime-introduction">简介:</label><br>
+        <textarea id="anime-introduction" rows="12" maxlength="512"
+                  th:text="${anime.getIntroduction()}"></textarea>
+
+        <div style="width: 100%;text-align: center;padding-bottom: 1rem">
+            <button class="btn btn-secondary" id="form-btn" disabled>确认保存</button>
+            <button class="btn btn-danger" id="anime-delete-btn">删除动漫</button>
+        </div>
+    </div>
+
+    <!-- cover edit -->
+    <div id="anime-cover" style="display: none;padding-bottom: 2rem">
+        <form name="form" method="get" enctype="multipart/form-data" >
+            <input type="file" id="cover-file" style="display: none;"
+                   onchange="$('#cover-path').text(this.value)" multiple="multiple" accept="image/*">
+            <input class="btn btn-info" type="button" value="上传照片" onclick="$('#cover-file').click()">
+            <p id="cover-path"></p>
+        </form>
+        <div id="cover-display">
+            <h5>当前封面:</h5>
+            <img th:src="${anime.getCoverUrl()} == null?'/img/noImg.png':${anime.getCoverUrl()}"
+                 id="current-cover" alt="current cover" height="293"  width="210">
+        </div>
+    </div>
+
+    <!-- video edit -->
+    <div id="anime-video" style="display: none">
+        <div>
+            <button data-toggle="modal" data-target="#video-edit-modal" data-whatever="@mdo"
+                    id="btn-add-video" class="btn btn-primary">添加视频</button>
+        </div>
+
+        <div class="tag-area" id="video-uploaded-tag" style="margin-top: 1rem">
+            <h5>已上传<span th:text="${episodeList.size()}"></span>个视频</h5>
+            <div style="text-align: center;font-size: 1.5rem" th:if="${episodeList.size()} eq 0">还未上传过视频</div>
+            <div id="uploaded-video-container" th:if="${episodeList.size()} gt 0">
+                 <div class="video-entity" style="position: relative" th:each="episode:${episodeList}">
+                     <div class="input-group mb-3">
+                         <div class="input-group-prepend">
+                             <span class="input-group-text">视频标题</span>
+                         </div>
+                         <input type="text" th:value="${episode.getEpisodeTitle()}" class="form-control" disabled>
+                     </div>
+                     <div class="input-group mb-3">
+                         <div class="input-group-prepend">
+                             <span class="input-group-text">视频集数</span>
+                         </div>
+                         <input type="text" th:value="${episode.getEpisodeNumber()}" class="form-control" disabled>
+                     </div>
+                     <p>视频文件MD5: <span style="font-weight: bold" th:text="${episode.getMd5()}"></span></p>
+                     <p>   视频类型: <span style="font-weight: bold" th:text="${episode.getVideoType()}"></span></p>
+                     <div style="text-align: right">
+                         <a class="btn btn-info" target="_blank"
+                            th:href="|${videoUrlRoot}${episode.getAnimeId()}/${episode.getMd5()}.${episode.getVideoType()}|">预览</a>
+                         <button class="btn btn-primary btn-edit-save" aria-label="edit">编辑</button>
+                         <button class="btn btn-danger btn-delete">删除</button>
+                     </div>
+                     <div th:replace="~{common/admin-common::admin-spinner}"></div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- spinner -->
+    <div th:replace="~{common/admin-common::admin-spinner}"></div>
+
+    <div id="submit-msg" style="opacity: 1.0"></div>
+
+</div>
+
+<!-- modal for feedback -->
+<div class="modal fade" id="video-edit-modal" tabindex="-1" role="dialog"
+     aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" id="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedbackModalLabel">上传新视频</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="upload-modal-body">
+                <div class="form-group">
+                    <label for="video-title" class="col-form-label">视频标题:</label>
+                    <input type="email" class="form-control" name="episodeTitle" id="video-title" maxlength="30">
+                    <p class="video-submit-msg">视频标题不能为空</p>
+                </div>
+                <div class="form-group">
+                    <label for="video-episode" class="col-form-label">视频集数:</label>
+                    <input type="email" class="form-control" name="episodeNumber" id="video-episode" maxlength="30">
+                    <p class="video-submit-msg">视频集数不能为空</p>
+                </div>
+                <form class="form-group" method="get" enctype="multipart/form-data">
+                    <input type="file" id="video-file" style="display: none;"
+                           onchange="$('#video-path').text(this.value)" multiple="multiple" accept=".mp4,.mkv">
+                    <input class="btn btn-info" type="button" value="上传视频" onclick="$('#video-file').click()">
+                    <p class="video-submit-msg">视频文件不能为空</p>
+                    <p id="video-path"></p>
+                </form>
+                <div class="form-group" style="display: block">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div>
+                    <p id="upload-msg" style="text-align: center"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-video-upload">上传</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Optional JavaScript -->
+<script src="/js/api/JQuery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+<script src="/js/util.js"></script>
+<script src="/js/adminAnimeInfoForm.js"></script>
+<script src="/js/adminRewriteAnime.js"></script>
+
+</body>
+</html>

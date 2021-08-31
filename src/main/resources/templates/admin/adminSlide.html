@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/common.css">
+    <title>滑动栏</title>
+</head>
+<body style="position: relative">
+
+<nav th:replace="~{common/admin-common::admin-navbar}"></nav>
+
+<div class="center-wrapper" style="padding-top: 1rem;padding-bottom: 1rem">
+    <div style="text-align: right">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#slide-add-modal">添加滑动</button>
+    </div>
+    <div class="slide-container mt-3" th:if="${slideList.size() > 0}">
+        <div th:each="slide:${slideList}" class="slide-entity p-2 mb-2" style="border-radius: 3px;background-color: #ccd1d7">
+            <p class="m-0">动画名字: <span style="font-weight: bold" th:text="${slide.getChineseName()}"></span></p>
+            <p>动画ID : <span style="font-weight: bold" th:text="${slide.getAnimeId()}"></span></p>
+            <div style="border: 1px solid black">
+                <img th:src="${slide.getCoverUrl()}" alt="slide" class="w-100 h-auto d-block">
+            </div>
+            <div class="control-area mt-2" style="text-align: right">
+                <button class="btn btn-danger delete-slide-btn">删除</button>
+            </div>
+        </div>
+    </div>
+    <div th:if="${slideList.size() == 0}" style="text-align: center">
+        <span>暂无记录</span>
+    </div>
+</div>
+
+<!-- slide add modal -->
+<div class="modal fade" id="slide-add-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content position-relative">
+            <div class="modal-header">
+                <h5 class="modal-title">添加新滑动</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="anime-id" class="col-form-label">输入动画ID:</label>
+                    <input type="text" class="form-control" maxlength="40" id="anime-id">
+                </div>
+                <form class="form-group" method="get" enctype="multipart/form-data">
+                    <input type="file" id="img-file" style="display: none;"
+                           onchange="$('#file-path').text(this.value)" multiple="multiple" accept=".jpg,.png">
+                    <input class="btn btn-info" type="button" value="上传图片" onclick="$('#img-file').click()">
+                    <p id="file-path"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="slide-add-btn">添加</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- spinner -->
+<div th:replace="~{common/admin-common::admin-spinner}"></div>
+
+<script src="/js/api/JQuery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="/js/util.js"></script>
+<script src="/js/adminSlide.js"></script>
+</body>
+</html>

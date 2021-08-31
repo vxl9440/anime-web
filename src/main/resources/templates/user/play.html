@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/user/nav.css">
+    <link rel="stylesheet" href="/css/user/play.css">
+    <title th:text="|${anime.getChineseName()} - ${currentEpisode.getEpisodeNumber()}|"></title>
+</head>
+<body>
+
+<div class="main-container">
+    <div th:replace="~{common/user-common::nav('play')}"></div>
+    <div class="content-container">
+        <div>
+            <a class="text-white" th:href="|/detail/${anime.getAnimeId()}|"
+               th:text="${anime.getChineseName()}" style="font-size: 1.5em"></a>
+            <span id="anime-id" th:text="${anime.getAnimeId()}" style="display: none"></span>
+        </div>
+        <div class="play-area mt-3">
+            <p class="text-white">播放区</p>
+            <div class="player-area" id="dplayer">
+
+            </div>
+            <div class="episode-area mt-3">
+                <h5 class="text-secondary mb-3">播放列表:</h5>
+                <ul class="list-unstyled">
+                    <li th:each="episode:${episodeList}" th:classappend="(${currentEpisode.getMd5()} == ${episode.getMd5()})?'current-episode':''" >
+                        <a th:href="|/play/${anime.getAnimeId()}/${episode.getMd5()}|" th:text="${episode.getEpisodeNumber()}"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="related-area mt-2">
+            <h5 class="text-secondary mb-3">关联动画:</h5>
+            <ul class="list-unstyled" th:if="${relation != null}">
+                <li th:if="${relatedAnime.getAnimeId() != anime.getAnimeId()}" th:each="relatedAnime:${relation.getAnimeList()}">
+                    <a th:href="|/detail/${relatedAnime.getAnimeId()}|" th:text="${relatedAnime.getChineseName()}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="recommend-area mt-3">
+            <h5 class="text-secondary mb-3">相关推荐:</h5>
+            <div class="recommend-items-container">
+                <div class="recommend-items-area" th:each="related:${relatedList}">
+                    <div>
+                        <a th:href="|/detail/${related.getAnimeId()}|">
+                            <img th:src="${related.getCoverUrl()}" alt="cover">
+                        </a>
+                        <div class="anime-name">
+                            <a class="text-white" th:href="|/detail/${related.getAnimeId()}|" th:text="${related.getChineseName()}"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="~{common/user-common::comment-area}"></div>
+    </div>
+</div>
+
+<span id="removed-item" th:text="|${videoUrlRoot}${anime.getAnimeId()}/${currentEpisode.getMd5()}.${currentEpisode.getVideoType()}|"></span>
+<script src="/js/api/JQuery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/dplayer@1.26.0/dist/DPlayer.min.js"></script>
+
+<script src="/js/util.js"></script>
+<script src="/js/commentEvent.js"></script>
+<script th:inline="javascript">
+    let dp = new DPlayer({
+        container: document.getElementById('dplayer'),
+        video: {
+            url: $('#removed-item').text()
+        }
+    });
+    $('#removed-item').remove();
+</script>
+</body>
+</html>
